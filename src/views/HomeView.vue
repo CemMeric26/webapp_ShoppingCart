@@ -6,15 +6,15 @@
     :active="active.product_drawer"
     v-on:close-product-drawer="closeProductDrawer()"
   />
+  <input type="text" v-model="search" placeholder="Search" /> 
     <div class="product-cards-container">
       <ProductSummaryCard 
-        v-for="product in items"
+        v-for="product in filteredProducts()"
         :key="product.id"
         :product="product"
         v-on:view-product = "viewProduct($event)"
       />
     </div>
-      
   </div>
 </template>
 
@@ -34,12 +34,14 @@ export default {
   data(){
     return{
       items: items,
+      search:"",
       product: null,
       active : {
         product_drawer : false
       }
     }
   },
+  
   methods: {
     viewProduct(product){
       this.product = product
@@ -48,10 +50,15 @@ export default {
     },
     closeProductDrawer(){
       this.active.product_drawer=false
-    }
+    },
+    filteredProducts() {
+                return this.items.filter(p => {
+                return p.title.toLowerCase().indexOf(this.search.toLowerCase()) != -1
+            })
+        }
+      }
   }
 
-}
 </script>
 
 <style lang="scss">
